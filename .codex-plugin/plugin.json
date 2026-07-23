@@ -1,0 +1,22 @@
+{
+  "name": "codex-bark-notifier",
+  "version": "0.1.0",
+  "description": "Send Codex completion notifications to Bark on iOS.",
+  "author": {
+    "name": "Eric"
+  },
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "Codex Bark Notifier",
+    "shortDescription": "Push Codex completion messages to Bark.",
+    "longDescription": "A local Codex plugin that provides a notify hook wrapper for forwarding completed Codex turns to the Bark iOS app while preserving any existing notify command.",
+    "developerName": "Eric",
+    "category": "Productivity",
+    "capabilities": ["Notification", "Local Script"],
+    "defaultPrompt": [
+      "Configure Codex Bark notifications.",
+      "Test my Bark completion notification."
+    ],
+    "brandColor": "#2E7D59"
+  }
+}
