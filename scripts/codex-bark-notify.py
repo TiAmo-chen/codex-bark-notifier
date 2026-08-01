@@ -89,8 +89,9 @@ def parse_args(argv: list[str]) -> tuple[argparse.Namespace, str]:
     parser.add_argument("--summary-provider", default=os.environ.get("CODEX_BARK_SUMMARY_PROVIDER", "deepseek"))
     parser.add_argument("--summary-model", default=os.environ.get("DEEPSEEK_MODEL", "deepseek-v4-flash"))
     parser.add_argument("--summary-base-url", default=os.environ.get("DEEPSEEK_BASE_URL", "https://api.deepseek.com"))
-    parser.add_argument("--summary-timeout", type=float, default=float(os.environ.get("DEEPSEEK_TIMEOUT", "10")))
+    parser.add_argument("--summary-timeout", type=float, default=float(os.environ.get("DEEPSEEK_TIMEOUT", "30")))
     parser.add_argument("--summary-max-input", type=int, default=int(os.environ.get("CODEX_BARK_SUMMARY_MAX_INPUT", "6000")))
+    parser.add_argument("--summary-max-tokens", type=int, default=int(os.environ.get("DEEPSEEK_MAX_TOKENS", "4096")))
     parser.add_argument("--next", nargs=argparse.REMAINDER, default=[])
     return parser.parse_args(argv), event_arg
 
@@ -207,7 +208,7 @@ def summarize_with_deepseek(args: argparse.Namespace, text: str) -> str:
             },
         ],
         "temperature": 0.2,
-        "max_tokens": 80,
+        "max_tokens": args.summary_max_tokens,
     }
     request = urllib.request.Request(
         deepseek_endpoint(args.summary_base_url),
