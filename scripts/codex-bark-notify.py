@@ -278,6 +278,8 @@ def send_bark(args: argparse.Namespace, body: str) -> None:
     timeout = float(os.environ.get("CODEX_BARK_TIMEOUT", "8"))
     with urllib.request.urlopen(request, timeout=timeout) as response:
         response.read()
+    preview = body if len(body) <= 80 else body[:77] + "..."
+    log(f"bark sent ok | title={args.title} | body={preview} | {len(body)} chars")
 
 
 def run_next(next_cmd: list[str], event_json: str) -> int:
@@ -307,8 +309,14 @@ def main() -> int:
     should_send = not kind or kind in COMPLETE_EVENTS or os.environ.get("CODEX_BARK_ALWAYS_SEND") == "1"
 
     if should_send:
+        text = completion_text(event)
+        used_deepseek = args.summary_provider.lower() == "deepseek" and text.strip()
         try:
-            send_bark(args, build_notification_body(args, event))
+            body = build_notification_body(args, event)
+            send_bark(args, body)
+            if used_deepseek:
+                preview = body if len(body) <= 80 else body[:77] + "..."
+                log(f"deepseek summary ok | {preview}")
         except (urllib.error.URLError, TimeoutError, ValueError, OSError) as exc:
             log(f"bark send failed: {exc}")
             if os.environ.get("CODEX_BARK_STRICT") == "1":
